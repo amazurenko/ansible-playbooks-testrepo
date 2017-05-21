@@ -1,0 +1,2 @@
+  - file: path={{ server_conf }}/nginx/ recurse=yes state=directory
+  - template: src=nginx.j2.conf dest={{ server_conf }}/nginx/nginx.conf

@@ -1,0 +1,38 @@
+  - name: Install Docker on Centos
+    yum: name={{ item }}
+    with_items: 
+    - docker
+    - python-setuptools    
+    when: ansible_distribution_version.split('.')[0] | int <= 7
+
+  - name: Install Docker on Ubuntu
+    apt:  name={{ item }}
+    with_items: 
+    - docker.io
+    - python
+    - python-setuptools
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install easy_install/pip
+    shell: >
+      easy_install pip;
+      pip install --upgrade pip;
+      pip install virtualenv;
+
+  - name: Install Docker components
+    pip: name={{ item }}
+    with_items:
+    - docker-compose
+
+  - name: correct docker-compose version selected
+    alternatives:
+      name: docker-compose
+      path: /usr/local/bin/docker-compose
+      link: /usr/bin/docker-compose
+
+  - name: Ensure Docker Daemon is Running
+    service: 
+      name=docker
+      state=started
+      enabled=yes
+

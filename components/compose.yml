@@ -1,0 +1,9 @@
+  - name: Copy Docker-Compose Template with configured services
+    template: 
+      src=docker-compose.j2.yml
+      dest={{ server_conf }}/docker-compose.yml
+
+  - name: Run Docker Containers
+    shell:
+      docker-compose up -d
+      chdir="{{ server_conf }}"

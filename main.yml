@@ -1,0 +1,25 @@
+#!/usr/bin/env ansible-playbook -i inventory -vv 
+- name: Provision VM 
+  hosts: all
+  become: yes
+
+  vars_files:
+  - ./vars.yml
+
+  tasks:
+  - debug: 
+      var: ansible_distribution_version
+          
+  - name: Ensure Server Folder Exists
+    file: path={{ server_conf | mandatory }} recurse=yes state=directory
+
+  - include: components/docker.yml
+  - include: components/rsyslog.yml
+  - include: components/jenkins.yml
+  - include: components/nginx.yml
+  - include: components/portainer.yml
+  - include: components/compose.yml
+
+  handlers:
+  - name: restart rsyslog
+    service: name=rsyslog state=restarted

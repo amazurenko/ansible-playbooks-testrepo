@@ -1,0 +1,17 @@
+  - file: path="{{ server_conf }}/rsyslog/" recurse=yes state=directory
+
+  - copy: src=templates/{{ item }} dest={{ server_conf }}/rsyslog/
+    with_items: 
+    - rsyslog-jenkins.conf
+    - rsyslog-nginx.conf
+    - rsyslog-portainer.conf
+    notify: restart rsyslog
+
+  - name: Configure rsyslog
+    lineinfile: 
+      dest=/etc/rsyslog.d/server.conf
+      regexp='\$IncludeConfig {{ server_conf }}/.*'
+      line='$IncludeConfig {{ server_conf }}/rsyslog/rsyslog-*.conf'
+      create=yes
+    notify: restart rsyslog
+

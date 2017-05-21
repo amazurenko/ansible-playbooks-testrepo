@@ -1,0 +1,1 @@
+  - file: path={{ server_conf }}/portainer/ recurse=yes state=directory
